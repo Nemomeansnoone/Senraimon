@@ -6,7 +6,7 @@ import asyncio
 import random 
 
 playername = str()
-enemylist: dict[str] = ['Sukhoi Su-27P Flanker-B', 'Mikoyan-Guervich MiG-29 9.12 Fulcrum-A', 'Infantry Platoon', 'AA Infantry Platoon', 'BMP-3 IFV', 'T-90M', 'Pantsir-S1', 'S-300', 'ZSU-57']
+enemylist: dict[str] = ['Su-27P Flanker-B', 'MiG-29 9.12 Fulcrum-A', 'Infantry Platoon', 'AA Infantry Platoon', 'BMP-3 IFV', 'T-90M', 'Pantsir-S1', 'S-300', 'ZSU-57']
 enemy1 = None
 enemy2 = None
 enemy3 = None
@@ -29,10 +29,24 @@ attack1 = "brrrt"
 attack2 = "brrrrrrrrrrrt"
 dialogue = "salut amigos"
 currentunitturn = None
+currentunittarget = None
 currentenemyturn = None
+currentenemytarget = None
 
 async def wait3():
     await asyncio.sleep(3)
+
+def settarget1():
+    global currentunittarget
+    currentunittarget = "enemy1"
+
+def settarget2():
+    global currentunittarget
+    currentunittarget = "enemy2"
+
+def settarget3():
+    global currentunittarget
+    currentunittarget = "enemy3"
 
 def startload():
     global enemy1
@@ -94,13 +108,13 @@ def startload():
     unit3_label.image = unit3_img_obj  # <-- KEEP REFERENCE
     unit3_label.place(x=420, y=200, width=160, height=80)
 
-    enemy1 = tk.Label(main_frame, text=f'{enemy1}', fg="#ffffff")
+    enemy1 = tk.Button(main_frame, text=f'{enemy1}', fg="#1e1e1e", bg="#ffffff", command=settarget1)
     enemy1.place(x=20, y=30, width=160, height=20)
 
-    enemy2 = tk.Label(main_frame, text=f'{enemy2}', fg="#ffffff")
+    enemy2 = tk.Button(main_frame, text=f'{enemy2}', fg="#1e1e1e", bg="#ffffff", command=settarget2)
     enemy2.place(x=220, y=30, width=160, height=20)
 
-    enemy3 = tk.Label(main_frame, text=f'{enemy3}', fg="#ffffff")
+    enemy3 = tk.Button(main_frame, text=f'{enemy3}', fg="#1e1e1e", bg="#ffffff", command=settarget3)
     enemy3.place(x=420, y=30, width=160, height=20)
 
     enemy1health = tk.Label(main_frame, text=f'{enemy1health}', fg="#ffffff")
@@ -170,10 +184,10 @@ def startprep():
     global unit3image
 
     enemy1 = random.choice(enemylist)
-    if enemy1 == ("Sukhoi Su-27P Flanker-B"):
+    if enemy1 == ("Su-27P Flanker-B"):
         enemy1health = 200
         enemy1image = "su-27.png"
-    elif enemy1 == ("Mikoyan-Guervich MiG-29 9.12 Fulcrum-A"):
+    elif enemy1 == ("MiG-29 9.12 Fulcrum-A"):
         enemy1health = 200
         enemy1image = "mig-29.png"
     elif enemy1 == ("Infantry Platoon"):
@@ -198,10 +212,10 @@ def startprep():
         enemy1health = 400
         enemy1image = "t-90m.png"
     enemy2 = random.choice(enemylist)
-    if enemy2 == ("Sukhoi Su-27P Flanker-B"):
+    if enemy2 == ("Su-27P Flanker-B"):
         enemy2health = 200
         enemy2image = "su-27.png"
-    elif enemy2 == ("Mikoyan-Guervich MiG-29 9.12 Fulcrum-A"):
+    elif enemy2 == ("MiG-29 9.12 Fulcrum-A"):
         enemy2health = 200
         enemy2image = "mig-29.png"
     elif enemy2 == ("Infantry Platoon"):
@@ -226,10 +240,10 @@ def startprep():
         enemy2health = 400
         enemy2image = "t-90m.png"
     enemy3 = random.choice(enemylist)
-    if enemy3 == ("Sukhoi Su-27P Flanker-B"):
+    if enemy3 == ("Su-27P Flanker-B"):
         enemy3health = 200
         enemy3image = "su-27.png"
-    elif enemy3 == ("Mikoyan-Guervich MiG-29 9.12 Fulcrum-A"):
+    elif enemy3 == ("MiG-29 9.12 Fulcrum-A"):
         enemy3health = 200
         enemy3image = "mig-29.png"
     elif enemy3 == ("Infantry Platoon"):
