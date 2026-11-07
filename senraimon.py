@@ -4,9 +4,11 @@ from PIL import Image
 from PIL import ImageTk
 import time
 import random 
+import assignunits
+import assignenemy
 
 playername = str()
-enemylist: dict[str] = ['Su-27P Flanker-B', 'MiG-29 9.12 Fulcrum-A', 'Infantry Platoon', 'AA Infantry Platoon', 'BMP-3 IFV', 'T-90M', 'Pantsir-S1', 'S-300', 'ZSU-57']
+enemylist: dict[str] = ['Su-27P Flanker-B', 'MiG-29 9.12 Fulcrum-A', 'Infantry Platoon', 'AA Infantry Platoon', 'BMP-3', 'T-90M', 'Pantsir-S1', 'S-300', 'ZSU-57']
 enemy1 = None
 enemy2 = None
 enemy3 = None
@@ -25,6 +27,18 @@ unit3health = int(0)
 unit1image = None
 unit2image = None
 unit3image = None
+u1a1 = None
+u1a2 = None
+u2a1 = None
+u2a2 = None
+u3a1 = None
+u3a2 = None
+e1a1 = None
+e1a2 = None
+e2a1 = None
+e2a2 = None
+e3a1 = None
+e3a2 = None
 attack1 = "brrrt"
 attack2 = "brrrrrrrrrrrt"
 dialogue = "salut amigos"
@@ -47,6 +61,55 @@ def settarget2():
 def settarget3():
     global currentunittarget
     currentunittarget = "enemy3"
+
+def winorlose():
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+    if enemy1 == "Dead" and enemy2 == "Dead" and enemy3 == "Dead":
+        wintext = tk.Label(main_frame, text="Congrats, you win!", fg="#ffffff", bg="#1e1e1e")
+        wintext.place(x=0, y=20, width=600, height=230)
+        winrestartbutton = tk.Button(main_frame, text="Restart", command=intro, fg="#1e1e1e", bg="#ffffff")
+        winrestartbutton.place(x=252, y=234, width=96, height=32)
+    elif unit1 == "Dead" and unit2 == "Dead" and unit3 == "Dead":
+        losetext = tk.Label(main_frame, text="You lost!", fg="#ffffff", bg="#1e1e1e")
+        losetext.place(x=0, y=20, width=600, height=230)
+        loserestartbutton = tk.Button(main_frame, text="Restart", command=intro, fg="#1e1e1e", bg="#ffffff")
+        loserestartbutton.place(x=252, y=234, width=96, height=32)
+    else:
+        afterturnload()
+
+def checkfordead():
+    global unit1
+    global unit2
+    global unit3
+    global unit1health
+    global unit2health
+    global unit3health
+    global enemy1
+    global enemy2
+    global enemy3
+    global enemy1health
+    global enemy2health
+    global enemy3health
+    if unit1health <= 0 or unit1health == 0:
+        unit1health = 0
+        unit1 = "Dead"
+    if unit2health <= 0 or unit2health == 0:
+        unit2health = 0
+        unit2 = "Dead"
+    if unit3health <= 0 or unit3health == 0:
+        unit3health = 0
+        unit3 = "Dead"
+    if enemy1health <= 0 or enemy1health == 0:
+        enemy1health = 0
+        enemy1 = "Dead"
+    if enemy2health <= 0 or enemy2health == 0:
+        enemy2health = 0
+        enemy2 = "Dead"
+    if enemy3health <= 0 or enemy3health == 0:
+        enemy3health = 0
+        enemy3 = "Dead"
+    winorlose()
 
 def attack():
     global currentunitturn
@@ -71,7 +134,9 @@ def attack():
         currentturn = "enemy"
         dialoguelb = tk.Label(main_frame, text="Attack hit! 50 damage dealt!", fg="#1e1e1e", bg="#ffffff")
         dialoguelb.place(x=0, y=330, width=420, height=70)
-    afterturnload()
+    root.update()
+    time.sleep(3)
+    checkfordead()
 
 def attacke():
     global currentenemyturn
@@ -82,6 +147,9 @@ def attacke():
     global unit2health
     global unit3health
     if prevenemyturn == "enemy1":
+        dialoguelb = tk.Label(main_frame, text=f"{unit1}'s turn:", fg="#1e1e1e", bg="#ffffff")
+        main_frame.update()
+        time.sleep(2)
         if currentenemytarget == "unit1":
             unit1health -= int(50)
             currentturn = "unit"
@@ -98,6 +166,9 @@ def attacke():
             dialoguelb = tk.Label(main_frame, text="Enemy attack hit! 50 damage dealt!", fg="#1e1e1e", bg="#ffffff")
             dialoguelb.place(x=0, y=330, width=420, height=70)
     elif prevenemyturn == "enemy2":
+        dialoguelb = tk.Label(main_frame, text=f"{unit2}'s turn:", fg="#1e1e1e", bg="#ffffff")
+        root.update()
+        time.sleep(2)
         if currentenemytarget == "unit1":
             unit1health -= int(50)
             currentturn = "unit"
@@ -114,6 +185,9 @@ def attacke():
             dialoguelb = tk.Label(main_frame, text="Enemy attack hit! 50 damage dealt!", fg="#1e1e1e", bg="#ffffff")
             dialoguelb.place(x=0, y=330, width=420, height=70)
     elif prevenemyturn == "enemy3":
+        dialoguelb = tk.Label(main_frame, text=f"{unit3}'s turn:", fg="#1e1e1e", bg="#ffffff")
+        root.update()
+        time.sleep(2)
         if currentenemytarget == "unit1":
             unit1health -= int(50)
             currentturn = "unit"
@@ -129,7 +203,9 @@ def attacke():
             currentturn = "unit"
             dialoguelb = tk.Label(main_frame, text="Enemy attack hit! 50 damage dealt!", fg="#1e1e1e", bg="#ffffff")
             dialoguelb.place(x=0, y=330, width=420, height=70)
-    afterturnload()
+    root.update()
+    time.sleep(3)
+    checkfordead()
 
 def turnthing():
     global unit1
@@ -264,51 +340,51 @@ def turnthing():
             if unit3 == ("F-16CM Block 50 (Air)"):
                 dialoguelb = tk.Label(main_frame, text="F-16CM Block 50 (Air)'s turn:", fg="#1e1e1e", bg="#ffffff")
                 dialoguelb.place(x=0, y=330, width=420, height=70)
-                attack1button = tk.Button(main_frame, text="20mm cannon strafe", command=attack(), bg="#1e1e1e")
+                attack1button = tk.Button(main_frame, text="20mm cannon strafe", command=attack, bg="#1e1e1e")
                 attack1button.place(x=440, y=330, width=140, height=30)
-                attack2button = tk.Button(main_frame, text="Air to air missile", command=attack(), bg="#1e1e1e")
+                attack2button = tk.Button(main_frame, text="Air to air missile", command=attack, bg="#1e1e1e")
                 attack2button.place(x=440, y=360, width=140, height=30)
             elif unit3 == ("F-16CM Block 50 (Ground)"):
                 dialoguelb = tk.Label(main_frame, text="F-16CM Block 50 (Ground)'s turn:", fg="#1e1e1e", bg="#ffffff")
                 dialoguelb.place(x=0, y=330, width=420, height=70)
-                attack1button = tk.Button(main_frame, text="20mm cannon strafe", command=attack(), bg="#1e1e1e")
+                attack1button = tk.Button(main_frame, text="20mm cannon strafe", command=attack, bg="#1e1e1e")
                 attack1button.place(x=440, y=330, width=140, height=30)
-                attack2button = tk.Button(main_frame, text="LDGP Mk 82 500lb bomb", command=attack(), bg="#1e1e1e")
+                attack2button = tk.Button(main_frame, text="LDGP Mk 82 500lb bomb", command=attack, bg="#1e1e1e")
                 attack2button.place(x=440, y=360, width=140, height=30)
             elif unit3 == ("Infantry Platoon"):
                 dialoguelb = tk.Label(main_frame, text="Infantry Platoon's turn:", fg="#1e1e1e", bg="#ffffff")
                 dialoguelb.place(x=0, y=330, width=420, height=70)
-                attack1button = tk.Button(main_frame, text="Rifle fire", command=attack(), bg="#1e1e1e")
+                attack1button = tk.Button(main_frame, text="Rifle fire", command=attack, bg="#1e1e1e")
                 attack1button.place(x=440, y=330, width=140, height=30)
                 attack2button = tk.Button(main_frame, text="Grenade launcher", command=attack, bg="#1e1e1e")
                 attack2button.place(x=440, y=360, width=140, height=30)
             elif unit3 == ("AA Infantry Platoon"):
                 dialoguelb = tk.Label(main_frame, text="AA Infantry Platoon's turn:", fg="#1e1e1e", bg="#ffffff")
                 dialoguelb.place(x=0, y=330, width=420, height=70)
-                attack1button = tk.Button(main_frame, text="Rifle fire", command=attack(), bg="#1e1e1e")
+                attack1button = tk.Button(main_frame, text="Rifle fire", command=attack, bg="#1e1e1e")
                 attack1button.place(x=440, y=330, width=140, height=30)
-                attack2button = tk.Button(main_frame, text="Stinger MANPADS", command=attack(), bg="#1e1e1e")
+                attack2button = tk.Button(main_frame, text="Stinger MANPADS", command=attack, bg="#1e1e1e")
                 attack2button.place(x=440, y=360, width=140, height=30)
             elif unit3 == ("M163 VADS"):
                 dialoguelb = tk.Label(main_frame, text="M163 VADS's turn:", fg="#1e1e1e", bg="#ffffff")
                 dialoguelb.place(x=0, y=330, width=420, height=70)
-                attack1button = tk.Button(main_frame, text="20mm cannon burst", command=attack(), bg="#1e1e1e")
+                attack1button = tk.Button(main_frame, text="20mm cannon burst", command=attack, bg="#1e1e1e")
                 attack1button.place(x=440, y=330, width=140, height=30)
-                attack2button = tk.Button(main_frame, text="20mm cannon burst", command=attack(), bg="#1e1e1e")
+                attack2button = tk.Button(main_frame, text="20mm cannon burst", command=attack, bg="#1e1e1e")
                 attack2button.place(x=440, y=360, width=140, height=30)
             elif unit3 == ("AN/TWQ-1 Avenger"):
                 dialoguelb = tk.Label(main_frame, text="AN/TWQ-1 Avenger's turn:", fg="#1e1e1e", bg="#ffffff")
                 dialoguelb.place(x=0, y=330, width=420, height=70)
-                attack1button = tk.Button(main_frame, text="Stinger MANPADS", command=attack(), bg="#1e1e1e")
+                attack1button = tk.Button(main_frame, text="Stinger MANPADS", command=attack, bg="#1e1e1e")
                 attack1button.place(x=440, y=330, width=140, height=30)
-                attack2button = tk.Button(main_frame, text="Stinger MANPADS", command=attack(), bg="#1e1e1e")
+                attack2button = tk.Button(main_frame, text="Stinger MANPADS", command=attack, bg="#1e1e1e")
                 attack2button.place(x=440, y=360, width=140, height=30)
             elif unit3 == ("MIM-104 Patriot"):
                 dialoguelb = tk.Label(main_frame, text="MIM-104 Patriot's turn:", fg="#1e1e1e", bg="#ffffff")
                 dialoguelb.place(x=0, y=330, width=420, height=70)
-                attack1button = tk.Button(main_frame, text="Patriot missile", command=attack(), bg="#1e1e1e")
+                attack1button = tk.Button(main_frame, text="Patriot missile", command=attack, bg="#1e1e1e")
                 attack1button.place(x=440, y=330, width=140, height=30)
-                attack2button = tk.Button(main_frame, text="Patriot missile", command=attack(), bg="#1e1e1e")
+                attack2button = tk.Button(main_frame, text="Patriot missile", command=attack, bg="#1e1e1e")
                 attack2button.place(x=440, y=360, width=140, height=30)
             elif unit3 == ("Dead"):
                 currentunitturn = "unit1"
@@ -342,7 +418,7 @@ def turnthing():
                     attacke()
                 elif enemyattackchoice == ("9K38 Igla"):
                     attacke()
-            elif enemy1 == ("BMP-3 IFV"):
+            elif enemy1 == ("BMP-3"):
                 enemyattackchoice = "".join(random.choices(["100mm cannon", "9M133M Kornet-M"]))
                 if enemyattackchoice == ("100mm cannon"):
                     attacke()
@@ -397,7 +473,7 @@ def turnthing():
                     attacke()
                 elif enemyattackchoice == ("9K38 Igla"):
                     attacke()
-            elif enemy2 == ("BMP-3 IFV"):
+            elif enemy2 == ("BMP-3"):
                 enemyattackchoice = "".join(random.choices(["100mm cannon", "9M133M Kornet-M"]))
                 if enemyattackchoice == ("100mm cannon"):
                     attacke()
@@ -452,7 +528,7 @@ def turnthing():
                     attacke()
                 elif enemyattackchoice == ("9K38 Igla"):
                     attacke()
-            elif enemy3 == ("BMP-3 IFV"):
+            elif enemy3 == ("BMP-3"):
                 enemyattackchoice = "".join(random.choices(["100mm cannon", "9M133M Kornet-M"]))
                 if enemyattackchoice == ("100mm cannon"):
                     attacke()
@@ -711,162 +787,39 @@ def startprep():
     global unit1image
     global unit2image
     global unit3image
+    global currentturn
+    global currentunitturn
+    global currentunittarget
+    global currentenemyturn
+    global u1a1
+    global u1a2
+    global u2a1
+    global u2a2
+    global u3a1
+    global u3a2
+    global e1a1
+    global e1a2
+    global e2a1
+    global e2a2
+    global e3a1
+    global e3a2
 
-    enemy1 = random.choice(enemylist)
-    if enemy1 == ("Su-27P Flanker-B"):
-        enemy1health = int(200)
-        enemy1image = "su-27.png"
-    elif enemy1 == ("MiG-29 9.12 Fulcrum-A"):
-        enemy1health = int(200)
-        enemy1image = "mig-29.png"
-    elif enemy1 == ("Infantry Platoon"):
-        enemy1health = int(150)
-        enemy1image = "infantry_e.png"
-    elif enemy1 == ("AA Infantry Platoon"):
-        enemy1health = int(150)
-        enemy1image = ("aa_infantry_e.png")
-    elif enemy1 == ("BMP-3 IFV"):
-        enemy1health = int(250)
-        enemy1image = "bmp-3.png"
-    elif enemy1 == ("Pantsir-S1"):
-        enemy1health = int(250)
-        enemy1image = "pantsir.png"
-    elif enemy1 == ("S-300"):
-        enemy1health = int(250)
-        enemy1image = "s-300.png"
-    elif enemy1 == ("ZSU-57"):
-        enemy1health = int(250)
-        enemy1image = "zsu-57.png"
-    elif enemy1 == ("T-90M"):
-        enemy1health = int(400)
-        enemy1image = "t-90m.png"
-    enemy2 = random.choice(enemylist)
-    if enemy2 == ("Su-27P Flanker-B"):
-        enemy2health = int(200)
-        enemy2image = "su-27.png"
-    elif enemy2 == ("MiG-29 9.12 Fulcrum-A"):
-        enemy2health = int(200)
-        enemy2image = "mig-29.png"
-    elif enemy2 == ("Infantry Platoon"):
-        enemy2health = int(150)
-        enemy2image = "infantry_e.png"
-    elif enemy2 == ("AA Infantry Platoon"):
-        enemy2health = int(150)
-        enemy2image = ("aa_infantry_e.png")
-    elif enemy2 == ("BMP-3 IFV"):
-        enemy2health = int(250)
-        enemy2image = "bmp-3.png"
-    elif enemy2 == ("Pantsir-S1"):
-        enemy2health = int(250)
-        enemy2image = "pantsir.png"
-    elif enemy2 == ("S-300"):
-        enemy2health = int(250)
-        enemy2image = "s-300.png"
-    elif enemy2 == ("ZSU-57"):
-        enemy2health = int(250)
-        enemy2image = "zsu-57.png"
-    elif enemy2 == ("T-90M"):
-        enemy2health = int(400)
-        enemy2image = "t-90m.png"
-    enemy3 = random.choice(enemylist)
-    if enemy3 == ("Su-27P Flanker-B"):
-        enemy3health = int(200)
-        enemy3image = "su-27.png"
-    elif enemy3 == ("MiG-29 9.12 Fulcrum-A"):
-        enemy3health = int(200)
-        enemy3image = "mig-29.png"
-    elif enemy3 == ("Infantry Platoon"):
-        enemy3health = int(150)
-        enemy3image = "infantry_e.png"
-    elif enemy3 == ("AA Infantry Platoon"):
-        enemy3health = int(150)
-        enemy3image = ("aa_infantry_e.png")
-    elif enemy3 == ("BMP-3 IFV"):
-        enemy3health = int(250)
-        enemy3image = "bmp-3.png"
-    elif enemy3 == ("Pantsir-S1"):
-        enemy3health = int(250)
-        enemy3image = "pantsir.png"
-    elif enemy3 == ("S-300"):
-        enemy3health = int(250)
-        enemy3image = "s-300.png"
-    elif enemy3 == ("ZSU-57"):
-        enemy3health = int(250)
-        enemy3image = "zsu-57.png"
-    elif enemy3 == ("T-90M"):
-        enemy3health = int(400)
-        enemy3image = "t-90m.png"
+    enemy1, enemy1health, enemy1image, e1a1, e1a2 = assignenemy.assign()
+    enemy2, enemy2health, enemy2image, e2a1, e2a2 = assignenemy.assign()
+    enemy3, enemy3health, enemy3image, e3a1, e3a2 = assignenemy.assign()
 
     unit1 = selectedunit1.get().strip()
     unit2 = selectedunit2.get().strip()
     unit3 = selectedunit3.get().strip()
 
-    if unit1 == ("F-16CM Block 50 (Air)"):
-        unit1health = int(200)
-        unit1image = "f-16_a.png"
-    elif unit1 == ("F-16CM Block 50 (Ground)"):
-        unit1health = int(200)
-        unit1image = "f-16_g.png"
-    elif unit1 == ("Infantry Platoon"):
-        unit1health = int(150)
-        unit1image = "infantry_u.png"
-    elif unit1 == ("AA Infantry Platoon"):
-        unit1health = int(150)
-        unit1image = "aa_infantry_u.png"
-    elif unit1 == ("M163 VADS"):
-        unit1health = int(250)
-        unit1image = "m163.png"
-    elif unit1 == ("AN/TWQ-1 Avenger"):
-        unit1health = int(250)
-        unit1image = "avenger.png"
-    elif unit1 == ("MIM-104 Patriot"):
-        unit1health = int(250)
-        unit1image = "patriot.png"
+    unit1health, unit1image, u1a1, u1a2 = assignunits.assignunit1(unit1)
+    unit2health, unit2image, u2a1, u2a2 = assignunits.assignunit2(unit2)
+    unit3health, unit3image, u3a1, u3a2 = assignunits.assignunit3(unit3)
 
-    if unit2 == ("F-16CM Block 50 (Air)"):
-        unit2health = int(200)
-        unit2image = "f-16_a.png"
-    elif unit2 == ("F-16CM Block 50 (Ground)"):
-        unit2health = int(200)
-        unit2image = "f-16_g.png"
-    elif unit2 == ("Infantry Platoon"):
-        unit2health = int(150)
-        unit2image = "infantry_u.png"
-    elif unit2 == ("AA Infantry Platoon"):
-        unit2health = int(150)
-        unit2image = "aa_infantry_u.png"
-    elif unit2 == ("M163 VADS"):
-        unit2health = int(250)
-        unit2image = "m163.png"
-    elif unit2 == ("AN/TWQ-1 Avenger"):
-        unit2health = int(250)
-        unit2image = "avenger.png"
-    elif unit2 == ("MIM-104 Patriot"):
-        unit2health = int(250)
-        unit2image = "patriot.png"
-
-    if unit3 == ("F-16CM Block 50 (Air)"):
-        unit3health = int(200)
-        unit3image = "f-16_a.png"
-    elif unit3 == ("F-16CM Block 50 (Ground)"):
-        unit3health = int(200)
-        unit3image = "f-16_g.png"
-    elif unit3 == ("Infantry Platoon"):
-        unit3health = int(150)
-        unit3image = "infantry_u.png"
-    elif unit3 == ("AA Infantry Platoon"):
-        unit3health = int(150)
-        unit3image = "aa_infantry_u.png"
-    elif unit3 == ("M163 VADS"):
-        unit3health = int(250)
-        unit3image = "m163.png"
-    elif unit3 == ("AN/TWQ-1 Avenger"):
-        unit3health = int(250)
-        unit3image = "avenger.png"
-    elif unit3 == ("MIM-104 Patriot"):
-        unit3health = int(250)
-        unit3image = "patriot.png"
-
+    currentturn = "unit"
+    currentunitturn = "unit1"
+    currentenemyturn = "enemy1"
+    currentunittarget = "enemy1"
     startload()
 
 
