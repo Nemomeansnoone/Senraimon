@@ -1,6 +1,9 @@
 # Senraimon
 ### Pokemon battles, but its war thunder!
 
+<img width="603" height="432" alt="Screenshot 2026-11-08 at 10 01 12 PM" src="https://github.com/user-attachments/assets/bf97c8dd-8faf-416a-b34d-de0513f06bf0" />
+
+
 ## _What is it?_
 Senraimon is a war thunder themed pokemon style turned based combat minigame, made for me to learn how to use tkinter in python!
 
